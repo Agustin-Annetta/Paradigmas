@@ -159,6 +159,7 @@ ataqueSistematico plantas zombie = foldl atacarZombie plantas (replicate numMord
     numMordiscos = length plantas
 
 --7--
+{-
 resultadoDeAtaque :: LineaDeDefensa -> Horda -> LineaDeDefensa
 resultadoDeAtaque linea horda = foldl (\defensa (zombie, _) -> atacarLinea zombie defensa) linea ataques
   where
@@ -172,7 +173,7 @@ lineaVacia linea = null (plantasVivas linea)
 
 zombiesVacios :: LineaDeDefensa -> Bool
 zombiesVacios linea = null (zombiesVivos linea)
-
+-}
 --8--
 theZombiesAteYourBrains :: Jardin -> Horda -> Bool
 theZombiesAteYourBrains jardin horda = all lineaVacia defensas
