@@ -190,7 +190,7 @@ elemento de todos los que cumplan con la funcion m con h de parametro,de la list
  Si no se cumple desvuelve el primer elemento de p
 -}
 
---B)No pudimos encontrar una forma mas facil de hacerlo operando con fun pero termino siendo mucho mas dificil.
+--B)No pudimos encontrar una forma mas facil de hacerlo operando con tail pero termino siendo mucho mas dificil.
 
 --C)Si la lista es infinita va a buscar si tiene algun h hasta encontrarlo y luego aplica filter a la lista hasta encontrar un elemento
 --que es el unico que necesitamos y se continua ejecutando correctamente.
