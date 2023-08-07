@@ -15,6 +15,8 @@ comio(simba, hormiga(schwartzenegger)).
 comio(simba, hormiga(niato)). 
 comio(simba, hormiga(lula)). 
 
+comio(shenzi,hormiga(conCaraDeSimba)). 
+
 pesoHormiga(2). 
 
 %peso(Personaje, Peso) 
@@ -45,11 +47,27 @@ cucarachofóbico(Personaje):-not(comio(Personaje,cucaracha)).
 
 %d) Conocer al conjunto de los picarones. Un personaje es picarón si comió una cucaracha jugosita ó si se come a Remeditos la vaquita. Además, pumba es picarón de por sí. 
 
-%2
+%%%%%         2         %%%%%
 
 persigue(scar, timon). 
 persigue(scar, pumba). 
 persigue(shenzi, simba). 
 persigue(shenzi, scar). 
-persigue(banzai, timon) 
+persigue(banzai, timon).
+persigue(scar, mufasa).  
 
+%a) Se quiere saber cuánto engorda un personaje (sabiendo que engorda una cantidad igual a la suma de los pesos de todos los bichos en su menú). Los bichos no engordan. 
+
+cuantoEngorda(Personaje, Peso):-
+
+%b) Pero como indica la ley de la selva, cuando un personaje persigue a otro, se lo termina comiendo, y por lo tanto también engorda. Realizar una nueva versión del predicado cuantoEngorda.
+
+cuantoEngorda2(Personaje, Peso):- 
+
+%3)Se quiere saber todas las posibles combinaciones posibles de comidas que puede tener un personaje dado. Se sabe que la comida no es solo lo que comió si no también los animales que persigue.
+
+combinaComidas(Personaje, ListaComidas)
+
+%4) Buscando el rey… Sabiendo que todo animal adora a todo lo que no se lo come o no lo persigue, encontrar al rey. El rey es el animal a quien sólo hay un animal que lo persigue y todos adoran
+
+rey(Personaje):-
