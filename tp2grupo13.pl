@@ -30,7 +30,7 @@ peso(banzai, 500).
 
 %1) a) Qué cucaracha es jugosita: ó sea, hay otra con su mismo tamaño pero ell es más gordita. 
 
-mismoTamanio(Cucaracha1, Cucaracha2):-((_,Tamanio1,_)==(_,Tamanio2,_)).
+mismoTamanio(Cucaracha1, Cucaracha2):-((_,Tamanio1,_)=(_,Tamanio2,_)).
 esMasGorda(Cucaracha1, Cucaracha2):-((_,_,Peso1)>(_,_,Peso2)).
 
 jugosita(Cucaracha):-mismoTamanio(Cucaracha, OtraCucaracha), esMasGorda(Cucaracha, OtraCucaracha).
