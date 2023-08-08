@@ -56,6 +56,8 @@ peso(cucaracha(UnaCucaracha , _ , PesoCuca) , Peso):-
 
 persigue(scar, timon).
 persigue(scar, pumba).
+persigue(scar, mufasa).  % Punto 4
+
 
 persigue(shenzi, simba).
 persigue(shenzi, scar).
@@ -70,19 +72,9 @@ persigue(banzai, timon).
 
 
 /*
-1) A falta de pochoclos…
+1) 
 
-
-Definir los predicados que permitan saber:
-
-
-a) Qué cucaracha es jugosita: ó sea, hay otra con su mismo tamaño pero ella es más gordita.
-
-
-?-jugosita(cucaracha(gimeno,12,8)).
-
-Yes
-
+a)
 */
 
 jugosita(cucaracha(UnaCucaracha , UnTamanio , UnPeso)):-
@@ -95,15 +87,6 @@ jugosita(cucaracha(UnaCucaracha , UnTamanio , UnPeso)):-
 
 /*
 b)
-
-Si un personaje es hormigofílico... (Comió al menos dos hormigas).
-
-
-?-hormigofilico(X).
-
-X = pumba;
-
-X = simba.
 */
 
 hormigofilico(Personaje):-
@@ -115,16 +98,7 @@ hormigofilico(Personaje):-
     
 
 /*
-
 c)
-
-Si un personaje es cucarachofóbico (no comió cucarachas).
-
-
-?-cucarachofobico(X).
-
-X = simba
-
 */
 
 cucarachofobico(Personaje):-
@@ -133,17 +107,7 @@ cucarachofobico(Personaje):-
 
 
 /*
-
-
 d)
-
-Conocer al conjunto de los picarones. Un personaje es picarón si comió una cucaracha jugosita ó si se come a Remeditos la vaquita. Además, pumba es picarón de por sí.
-
-
-?-picarones(L).
-
-L = [pumba, timon, simba]
-
 */
 
 picaron(pumba).
@@ -162,59 +126,9 @@ picarones(ListaPicarones):-
     findall(Personaje , picaron(Personaje) , ListaPicarones).
 
 /*
-2) Pero yo quiero carne…
-
-
-Aparece en escena el malvado Scar, que persigue a algunos de nuestros amigos. Y a su vez, las hienas Shenzi y Banzai también se divierten...
-
-
-persigue(scar, timon).
-
-persigue(scar, pumba).
-
-persigue(shenzi, simba).
-
-persigue(shenzi, scar).
-
-persigue(banzai, timon).
-
-Por ejemplo, un día había una hiena distraída y con mucho hambre y amplió su dieta
-
-
-comio(shenzi,hormiga(conCaraDeSimba)).
-
-
-Completando la base...
-
-
-peso(scar, 300).
-
-
-peso(shenzi, 400).
-
-peso(banzai, 500).
-
+2) 
 
 a)
-
-Se quiere saber cuánto engorda un personaje (sabiendo que engorda una cantidad igual a la suma de los pesos de todos los bichos en su menú). Los bichos no engordan.
-
-
-?-cuantoEngorda(Personaje, Peso).
-
-Personaje= pumba
-
-Peso = 83;
-
-Personaje= timon
-
-Peso = 17;
-
-
-Personaje= simba
-
-
-Peso = 10
 
 */
 
@@ -225,9 +139,6 @@ menu(Personaje , Comidas):-
     comio(Personaje , _), % El personaje tiene que haber comido algo
     findall(Peso , comio(Personaje , Peso) , Comidas).
 
-menu(Personaje , []):- % si no comió ningún bicho tiene que devolver una lista vacía, pero para verificar que sea un personaje comprueba si tiene un peso
-    peso(Personaje , _),
-    not(( comio(Personaje , _) , findall(Peso , comio(Personaje , Peso) , _))).
 
 peso_Extra([] , []).
 peso_Extra([Comida|Comidas] , [Peso|Pesos]):- % Dada una lista con las "comidas", devuelve una nueva con los pesos
@@ -244,29 +155,16 @@ cuantoEngorda(Personaje, Peso):-
 
 
 /*
-b) Pero como indica la ley de la selva, cuando un personaje persigue a otro, se lo termina comiendo, y por lo tanto también engorda. Realizar una nueva versión del predicado cuantoEngorda.
-
-
-?-cuantoEngorda(scar,Peso).
-
-Peso = 150
-
-(es la suma de lo que pesan pumba y timon)
-
-
-
-?-cuantoEngorda(shenzi,Peso).
-
-Peso = 502
-
-(es la suma del peso de scar y simba, más 2 que pesa la hormiga)
+b) 
 */
 
-% Predicado genérico para concatenar listas
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Predicado genérico para concatenar listas %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 conc([], Lista, Lista).
 conc(Lista , [] , Lista).
 conc([Elemento|RestoLista1], Lista2, [Elemento|Resultado]) :-
     conc(RestoLista1, Lista2, Resultado).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 presas(Personaje , Cazados):-
     persigue(Personaje , _),
@@ -276,11 +174,6 @@ presas(Personaje , []):-
     peso(Personaje , _),
     not(persigue(Personaje , _)).
 
-%persigue(scar, timon).
-menu2(Personaje , Comidas):-
-    presas(Personaje , Cazados),
-    menu(Personaje , Bichos),
-    conc(Cazados,Bichos,Comidas).
 
 
 esPersonaje(Personaje):-
@@ -289,14 +182,36 @@ esPersonaje(Personaje):-
     persigue(Personaje , _).
 
 
-cuantoEngorda_2(Personaje, Peso):-
+
+%persigue(scar, timon).
+menu2(Personaje , Comidas):-
+    esPersonaje(Personaje),   % Para que haya podido comer a alguien primero verifica si es un personaje (Los bichos no comen nada por lo que se los excluye)
+    presas(Personaje , Cazados),
+    menu(Personaje , Bichos),
+    conc(Cazados,Bichos,Comidas).
+
+menu2(Personaje , Comidas):-
+    esPersonaje(Personaje),
+    presas(Personaje , Comidas),
+    not(menu(Personaje , _)). % No tiene que haber comido ningún bicho
+
+
+
+cuantoEngorda2(Personaje, Peso):-
     esPersonaje(Personaje),
     menu2(Personaje , Comidas),
     peso_Extra(Comidas , Pesos),
     sumlist(Pesos, Peso).
 
+
+% Predicado que se usa para evitar valores repetidos cuando se hace la consulta de cuantoEngorda2
+cuantoEngordanTodos(Personaje , Peso , Resultados) :- setof((Personaje , Peso), cuantoEngorda2(Personaje , Peso), Resultados).
+
+
 /*
-c) Ahora se complica el asunto, porque en realidad cada animal antes de comerse a sus víctimas espera a que éstas se alimenten. De esta manera, lo que engorda un animal no es sólo el peso original de sus víctimas, sino también hay que tener en cuenta lo que éstas comieron y por lo tanto engordaron. Hacer una última versión del predicado.
+c) Ahora se complica el asunto, porque en realidad cada animal antes de comerse a sus víctimas espera a que éstas se alimenten. 
+De esta manera, lo que engorda un animal no es sólo el peso original de sus víctimas, sino también hay que tener en cuenta lo que éstas comieron 
+y por lo tanto engordaron. Hacer una última versión del predicado.
 
 
 ?-cuantoEngorda(scar,Peso).
@@ -317,12 +232,13 @@ Peso = 762
 (502 era la suma del peso de scar y simba, más 2 de la hormiga. A eso se le suman los 250 de todo lo que engorda scar y 10 que engorda simba)
 */
 
-/*
-peso_Extra([] , []).
-peso_Extra([Comida|Comidas] , [Peso|Pesos]):- % Dada una lista con las "comidas", devuelve una nueva con los pesos
-    peso(Comida , Peso),
-    peso_Extra(Comidas , Pesos).
-*/
+
+
+
+
+
+    
+
 
 
 
@@ -341,23 +257,31 @@ combinaComidas(Personaje, ListaComidas)
 
 
 /*
-4) Buscando el rey…
-
-Sabiendo que todo animal adora a todo lo que no se lo come o no lo persigue, encontrar al rey. El rey es el animal a quien sólo hay un animal que lo persigue y todos adoran.
-
-
-Si se agrega el hecho:
-
-
-persigue(scar, mufasa).
-
-
-?-rey(R).
-
-R = mufasa.
-
-(sólo lo persigue scar y todos los adoran)
+4) 
 */
+
+loPersiguen(Personaje , Lista):-
+    esPersonaje(Personaje),
+    findall(Cazador , persigue(Cazador , Personaje) , Lista).
+
+adoraA(Adorado , Adorador):-
+    esPersonaje(Adorado),
+    esPersonaje(Adorador),
+    Adorado \= Adorador,
+    not(comio(Adorado , Adorador)).
+adoraA(Adorado , Adorador):-
+    esPersonaje(Adorado),
+    esPersonaje(Adorador),
+    Adorado \= Adorador,
+    not(persigue(Adorado , Adorador)).
+
+rey(Personaje):-
+    loPersiguen(Personaje , Perseguidores),
+    length(Perseguidores , CantidadPerseguidores),
+    CantidadPerseguidores is 1,
+    forall(esPersonaje(Animal), adoraA(Personaje , Animal)).
+    
+
 
 
 
@@ -368,7 +292,18 @@ R = mufasa.
 
 a. Polimorfismo
 
+El polimorfismo se utilizó en varias ocasiones dentro de este trabajo. La primera de ellas fue para poder calcular el peso de los distintos bichos, ya que se emplea el mismo predicado "peso"
+que se utiliza también para obtener el peso de los distintos personajes dentro de la base de conocimientos. Esto lo que permite es poder generalizar diferentes métodos de cálculo de peso dentro de 
+un mismo predicado, facilitando considerablemente el trabajo a la hora de obtener la suma de los pesos de lo que come un personaje, utilizando el predicado cuantoEngorda().
+
+
+
+
 b. Recursividad
 
+La recursividad también se emplea en más de una ocasión, como por ejemplo cuando se emplea el predicado peso_Extra(). Este mismo recibe como parámetros una lista de
+Comidas (las cuales pueden ser tanto bichos como personajes) y una lista numérica correspondiente a los pesos de cada una. Para poder "obtener" los pesos de cada comida se emplea la recursividad,
+partiendo las listas en cabeza y cola. Luego de eso se establece la relación entre la cabeza de ambas listas (la  cual está dada por el predicado peso), para finalmente llamar de forma recursiva al mismo predicado, pero 
+cuyos parámetros ahora son las colas de ambas listas. Es importante aclarar que se contempla que para cuando una de las listas es vacía, la otra tiene que estarlo también de forma obligatoria.
 */
 
