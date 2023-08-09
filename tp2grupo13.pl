@@ -56,7 +56,7 @@ peso(cucaracha(UnaCucaracha , _ , PesoCuca) , Peso):-
 
 persigue(scar, timon).
 persigue(scar, pumba).
-persigue(scar, mufasa).  % Punto 4
+%persigue(scar, mufasa).  % Punto 4
 
 
 persigue(shenzi, simba).
@@ -209,40 +209,62 @@ cuantoEngordanTodos(Personaje , Peso , Resultados) :- setof((Personaje , Peso), 
 
 
 /*
-c) Ahora se complica el asunto, porque en realidad cada animal antes de comerse a sus víctimas espera a que éstas se alimenten. 
-De esta manera, lo que engorda un animal no es sólo el peso original de sus víctimas, sino también hay que tener en cuenta lo que éstas comieron 
-y por lo tanto engordaron. Hacer una última versión del predicado.
-
-
-?-cuantoEngorda(scar,Peso).
-
-Peso = 250
-
-
-(150, que era la suma de lo que pesan pumba y timon, más 83 que se come
-
-pumba y 17 que come timon )
-
-
-?-cuantoEngorda(shenzi,Peso).
-
-Peso = 762
-
-
-(502 era la suma del peso de scar y simba, más 2 de la hormiga. A eso se le suman los 250 de todo lo que engorda scar y 10 que engorda simba)
+c)
 */
 
+any(Predicado, Lista) :-
+    member(Elemento, Lista),
+    call(Predicado, Elemento).
 
+esCazador(Personaje):-
+    persigue(Personaje , _).
 
+comeCazadores(Personaje):-
+    presas(Personaje , Presas),
+    any(esCazador  ,Presas).
+
+cuantoEngordaPresa([], 0).
+cuantoEngordaPresa([Presa|Presas], PesoTotal) :-
+    cuantoEngordaPresa(Presas, PesoPresas),
+    cuantoEngorda(Presa, PesoPresa),
+    PesoTotal is PesoPresas + PesoPresa.
+
+cuantoEngorda3(Personaje , Peso):-
+    esPersonaje(Personaje),
+    not(comeCazadores(Personaje)), % Si no come a animales que a su vez comen animales, significa que es igual a sumar cuantoEngorda2, con lo que comió cada uno de los animales
+    cuantoEngorda2(Personaje , PesoBase),
+    presas(Personaje , Presas),
+    cuantoEngordaPresa(Presas , PesoPresas),
+    Peso is PesoPresas + PesoBase.
 
 
 
     
+cuantoEngorda3(Personaje , Peso):-
+    esPersonaje(Personaje),
+    comeCazadores(Personaje),
+    cuantoEngorda2(Personaje , PesoBase), %Calcula el peso directo de los animales/bichos que se come él
+    presas(Personaje , Presas),
+    cuantoEngordaPresa2(Presas , PesoPresas),
+    Peso is PesoPresas + PesoBase.
+
+cuantoEngordaPresa2([],0).
+cuantoEngordaPresa2([Presa|Presas] , PesoTotal):-
+    esCazador(Presa),
+    cuantoEngordaPresa2(Presas , PesoPresas),
+    cuantoEngorda3(Presa, PesoPresa),
+    PesoTotal is PesoPresas + PesoPresa.
+
+cuantoEngordaPresa2([Presa|Presas] , PesoTotal):-
+    not(esCazador(Presa)),
+    cuantoEngordaPresa2(Presas , PesoPresas),
+    cuantoEngorda(Presa, PesoPresa),
+    PesoTotal is PesoPresas + PesoPresa.
 
 
 
 
-
+cuantoEngordanTodos3(Personaje , Peso , Resultados) :- setof((Personaje , Peso), cuantoEngorda3(Personaje , Peso), Resultados).
 
 /*
 3) Para acelerar el plato de comida…
@@ -253,6 +275,8 @@ Se quiere saber todas las posibles combinaciones posibles de comidas que puede t
 combinaComidas(Personaje, ListaComidas)
 */
 
+combinaComidas(Personaje , ListaComidas):-
+    menu2(Personaje , ListaComidas).
 
 
 
