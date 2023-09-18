@@ -1,0 +1,122 @@
+import tp.*
+
+describe "pou deberia" {	
+	
+	test "energizarse solo si se esta riendo y su energia es menor a la incial" {
+		const energiaInicial = Pou.energiaInicial()
+		
+		Pou.energia(energiaInicial - 1)
+		Pou.estadosDeAnimo().durmio(true)
+		Pou.estadosDeAnimo().durmio(false)
+		
+		
+		Pou.energizarse()
+		
+		assert.that(Pou.energia() == energiaInicial)
+	}
+	
+	test "mantener su energia si come fruta" {
+		const energia = Pou.energia()
+		Pou.comer(Fruta)
+		assert.that(Pou.energia() == energia)
+	}
+	
+	test "mantener su energia si come verdura" {
+		const energia = Pou.energia()
+		Pou.comer(Verdura)
+		assert.that(Pou.energia() == energia)
+	}
+	
+	test "disminuir 0.5 su energia si toma bebida" {
+		const energia = Pou.energia()
+		Pou.comer(Bebida)
+		const energiaEsperada = energia - 0.5
+		assert.that(Pou.energia() == energiaEsperada)
+	}
+	
+	test "disminuir 1.2 en su energia si come fritanga" {
+		const energia = Pou.energia()
+		Pou.comer(Fritura)
+		const energiaEsperada = energia - 1.2
+		assert.that(Pou.energia() == energiaEsperada)
+	}
+	
+	test "deberia baniarse si comio y jugo"{
+		Pou.estadosDeAnimo().jugo(true)
+		Pou.estadosDeAnimo().comio(true)
+		assert.that(Pou.estadosDeAnimo().seBanio())
+	}
+	test "no deberia baniarse si no comio ni jugo"{
+		Pou.estadosDeAnimo().jugo(false)
+		Pou.estadosDeAnimo().comio(false)
+		assert.notThat(Pou.estadosDeAnimo().seBanio())
+	}	
+	test "disminuir 4 en su energia si se bania" {
+		const energia = Pou.energia()
+		Pou.estadosDeAnimo().seBanio()
+		const energiaEsperada = energia - 4
+		assert.that(Pou.energia() == energiaEsperada)
+	}
+}
+
+describe "Estados de animo de pou" {
+	test "pou deberia reirse si durmio" {
+		Pou.estadosDeAnimo().durmio(true)
+		assert.that(Pou.estadosDeAnimo().seRie())
+	}
+	test "pou deberia reirse si comio" {
+		Pou.estadosDeAnimo().comio(true)
+		assert.that(Pou.estadosDeAnimo().seRie())
+	}
+	test "pou deberia reirse si jugo" {
+		Pou.estadosDeAnimo().jugo(true)
+		assert.that(Pou.estadosDeAnimo().seRie())
+	}
+	test "pou deberia reirse si no se baño" {
+		Pou.estadosDeAnimo().seBanio(false)
+		assert.that(Pou.estadosDeAnimo().seRie())
+	}
+	test "pou deberia no reirse si se baño" {
+		Pou.estadosDeAnimo().seBanio(true)
+		assert.notThat(Pou.estadosDeAnimo().seRie())
+	}
+}
+
+describe "alimentacion"{
+	test "tiene alimentacion saludable si menos del 1% de la comida es fritura"{
+		Pou.comer(Verdura)
+		assert.that(Pou.alimentacion().tieneAlimentacionSaludable())
+	}
+	test "No tiene alimentacion saludable si mas del 1% de la comida es fritura"{
+		Pou.comer(Fritura)
+		assert.notThat(Pou.alimentacion().tieneAlimentacionSaludable())
+	}
+	
+} 
+
+describe "Estados de salud del pou"{
+	test "esta en estado deplorable"{
+		Pou.comer(Fritura)
+		Pou.salud().deplorable()
+		assert.equals(Pou.salud().obtenerEstado(),'deplorable')
+	}
+	test "esta en estado alarmante"{
+		Pou.comer(Fritura)
+		Pou.comer(Verdura)
+		Pou.estadosDeAnimo().jugo(false)
+		Pou.estadosDeAnimo().comio(false)
+		Pou.estadosDeAnimo().durmio(false)
+		Pou.estadosDeAnimo().seBanio()
+		assert.equals(Pou.salud().obtenerEstado(),'alarmante')
+	}
+	test "esta en estado normal"{
+		Pou.comer(Verdura)
+		Pou.alimentacion().tieneAlimentacionSaludable()
+		assert.equals(Pou.salud().obtenerEstado(),'normal')
+	}
+	test "esta aburrido"{
+		Pou.comer(Verdura)
+		Pou.baniarse()
+		assert.equals(Pou.salud().obtenerEstado(),'aburrido')
+	}
+}
