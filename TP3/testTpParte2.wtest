@@ -1,0 +1,133 @@
+import tpParte2.*
+
+const manzana = new Comida(energiaQueAporta=1, esSaludable=true, objetoDeCoccion=null)
+const churro = new Comida(energiaQueAporta=0.5, esSaludable=false, objetoDeCoccion=freidora)
+const cocaCola = new Comida(energiaQueAporta=0.5, esSaludable=false, objetoDeCoccion=null)
+const cafeConLeche = new Comida(energiaQueAporta=0.5, esSaludable=false, objetoDeCoccion=null)
+const lechuga = new Comida(energiaQueAporta=1, esSaludable=true, objetoDeCoccion=null)
+const pan = new Comida(energiaQueAporta=0.2, esSaludable=false, objetoDeCoccion=null)
+const ensalada = new Comida(energiaQueAporta=1, esSaludable=true, objetoDeCoccion=null)
+const papaFrita = new Comida(energiaQueAporta=0.2, esSaludable=false, objetoDeCoccion=freidora)
+
+describe "comidas" {
+	
+		
+	test "la comida debe ser fritura" {
+		assert.that(!manzana.esFritura())
+	}
+	
+	test "la comida no debe ser fritura" {
+		assert.that(churro.esFritura())
+	}
+
+}
+
+
+describe "mochi" {
+	test "esta aburrido si come alimentos saludables y esta limpio" {
+		const alimentacionPou = new Alimentacion()
+		const estadoInternoPou = new EstadoInterno(alimentacion=alimentacionPou, seBanio=false)
+		const mochi = new Mascota(edad=10, energia=100, alimentacion=alimentacionPou, estadoInterno=estadoInternoPou)
+		mochi.comer(lechuga)
+		mochi.comer(manzana)
+		assert.notThat(mochi.estadoInterno().aburrido())
+	}
+}
+
+describe "flixnat" {
+	test "esta aburrido si come todos alimentos sin fritura" {
+		const alimentacionPou = new Alimentacion()
+		const estadoInternoPou = new EstadoInterno(alimentacion=alimentacionPou)
+		const flixnat = new Mascota(edad=25, energia=250, alimentacion=alimentacionPou, estadoInterno=estadoInternoPou)
+		flixnat.comer(lechuga)
+		flixnat.comer(manzana)
+		assert.notThat(flixnat.estadoInterno().aburrido())
+	}
+}
+
+describe "poucotton" {
+	test "esta feliz despues de comer papas fritas y cocaCola" {
+		const alimentacionPou = new Alimentacion()
+		const estadoInternoPou = new EstadoInterno(alimentacion=alimentacionPou)
+		const poucotton = new Mascota(edad=2, energia=20, alimentacion=alimentacionPou, estadoInterno=estadoInternoPou)
+		poucotton.comer(papaFrita)
+		poucotton.comer(cocaCola)
+		assert.that(poucotton.estadoInterno().feliz())
+	}
+}
+
+describe "poucotton con mochi" {
+	test "hacer jugar a mochi con poucotton" {
+		const alimentacionPou = new Alimentacion(alimentosConsumidos=[lechuga, ensalada], estaBienAlimentado = true)
+		const estadoInternoPou = new EstadoInterno(alimentacion=alimentacionPou, seBanio = true, jugo = false, comio = false, durmio = false)
+		const poucotton = new Mascota(edad=2, energia=200, alimentacion=alimentacionPou, estadoInterno=estadoInternoPou)
+		poucotton.comer(lechuga)
+		
+		const alimentacionPou2 = new Alimentacion()
+		const estadoInternoPou2 = new EstadoInterno(alimentacion=alimentacionPou2, seBanio = true)
+		const mochi = new Mascota(edad=10, energia=100, alimentacion=alimentacionPou2, estadoInterno=estadoInternoPou2)
+		mochi.comer(manzana)
+		
+		const juego = "pelota"
+		
+		mochi.jugarConPou(juego, poucotton)
+	}
+}
+
+describe "mochi con flixnat" {
+	test "hacer jugar a mochi con flixnat y ver si terminan felices" {
+		const alimentacionPou = new Alimentacion()
+		const estadoInternoPou = new EstadoInterno(alimentacion=alimentacionPou)
+		const flixnat = new Mascota(edad=25, energia=250, alimentacion=alimentacionPou, estadoInterno=estadoInternoPou)
+		flixnat.comer(lechuga)
+		
+		const alimentacionPou2 = new Alimentacion()
+		const estadoInternoPou2 = new EstadoInterno(alimentacion=alimentacionPou2, seBanio = true)
+		const mochi = new Mascota(edad=10, energia=100, alimentacion=alimentacionPou2, estadoInterno=estadoInternoPou2)
+		mochi.comer(manzana)
+		
+		const juego = "pelota"
+		mochi.jugarConPou(juego, flixnat)
+		
+		assert.that(mochi.estadoInterno().feliz() && flixnat.estadoInterno().feliz())
+	}
+}
+
+describe "Ockelend come"{
+	test "hacer comer a Ockelend varias comidas y ver si aumento la edad"{		
+		pouAdulto.comer(lechuga)
+		pouAdulto.comer(manzana)
+		pouAdulto.comer(churro)
+		assert.notThat(pouAdulto.edad()>60)
+	}
+	
+}
+
+describe "Okelend hace actividades"{
+	
+	test "Okelend juega con Poucotton, come, se baña, come y vuelve a jugar"{		
+		const alimentacion = new Alimentacion()
+		const estadoInterno = new EstadoInterno(alimentacion=alimentacion)
+		const poucotton = new Mascota(edad=2, energia=20, alimentacion=alimentacion, estadoInterno=estadoInterno)
+		const juego = "pelota"
+		pouAdulto.jugarConPou(juego, poucotton)
+		pouAdulto.comer(ensalada)
+		pouAdulto.baniarse()
+		pouAdulto.dormir()
+		pouAdulto.comer(cafeConLeche)
+		pouAdulto.comer(pan)
+		pouAdulto.jugarConPou(juego, poucotton)
+		assert.that(pouAdulto.edad()>60)
+	}
+}
+
+describe "Poucotton come y se baña"{
+	test "Ver si esta feliz despues de comer y bañarse"{
+		const alimentacionPou = new Alimentacion()
+		const estadoInternoPou = new EstadoInterno(alimentacion=alimentacionPou)
+		const poucotton = new Mascota(edad=2, energia=20, alimentacion=alimentacionPou, estadoInterno=estadoInternoPou)
+		poucotton.comer(lechuga)
+		poucotton.baniarse()
+		assert.that(poucotton.estadoInterno().feliz())
+	}
+}
